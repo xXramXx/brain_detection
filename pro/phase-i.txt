@@ -1,0 +1,30 @@
+! pip install ultralytics
+import tensorflow as tf
+from tensorflow.keras.optimizers import RMSprop
+import matplotlib.pyplot as plt
+import torch
+import os
+import cv2
+import pickle
+import random
+import numpy as np
+from ultralytics import YOLO
+from tensorflow.keras.models import load_model
+import sys
+model = torch.hub.load('ultralytics/yolov5', 'yolov5s')
+
+model3 = torch.hub.load('ultralytics/yolov5', 'custom', path='last.pt', force_reload=True)
+model3.conf=0.60
+model2 = load_model("mri_calss.h5")
+
+%matplotlib inline
+sub=['glioma_tumor','meningioma_tumor','pituitary_tumor','no_tumor']
+test_img="image(40).jpg"
+img1=cv2.imread(test_img)
+img2=sculptdata(test_img)
+img3=np.array(img2).reshape(-1,224,224,3)
+results = model3(img1)
+pre_dat = model2.predict(img3)
+print(sub[np.argmax(pre_dat)])
+plt.imshow(np.squeeze(results.render()))
+plt.show()
