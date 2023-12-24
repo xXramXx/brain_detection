@@ -1,28 +1,33 @@
-%matplotlib inline 
+! pip install ultralytics
 import tensorflow as tf
 from tensorflow.keras.optimizers import RMSprop
 import matplotlib.pyplot as plt
-from ultralytics import YOLO
 import torch
 import os
 import cv2
 import pickle
 import random
 import numpy as np
-from tensorflow.keras.models import load_model, model_from_json
+from ultralytics import YOLO
+from tensorflow.keras.models import load_model
 import sys
 
-test_img_1="image(40).jpg"
-img1=cv2.imread(test_img_1)
-img2=cv2.resize(img2,(224,224))
-img3=cv2.normalize(img3, None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
+def sculptdata(images):
+    img=cv2.imread(images)
+    img=cv2.resize(img,(224,224))
+    img=cv2.normalize(img, None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
+    return img
 
-model = torch.hub.load('ultralytics\yolov5', 'yolov5s')
-model3 = torch.hub.load('ultralytics\yolov5', 'custom', path='.\last.pt', force_reload=True)
+model = torch.hub.load('ultralytics/yolov5', 'yolov5s')
+
+model3 = torch.hub.load('ultralytics/yolov5', 'custom', path='last.pt', force_reload=True)
 model3.conf=0.60
 
+%matplotlib inline
 sub=['glioma_tumor','meningioma_tumor','pituitary_tumor','no_tumor']
+test_img="image(40).jpg"
+img1=cv2.imread(test_img)
 
-results = model3(img3)
+results = model3(img1)
 plt.imshow(np.squeeze(results.render()))
 plt.show()
